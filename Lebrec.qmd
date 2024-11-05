@@ -1,6 +1,14 @@
 ---
-title: "Lebrec"
-format: html
+title: "lebrec"
+author: "Loiclebrec"
+format: 
+  html:
+    code-fold: true       # Enables code folding in HTML output
+    code-tools: true
+  pdf:
+    code: false           # Hides code in PDF output
+execute:
+  echo: false             # Hides code in both HTML and PDF globally
 ---
 #Introduction
 ```{r}
@@ -17,13 +25,14 @@ theme_set(theme_minimal())
 ```{r}
 # Load the data set
 grades <- read_csv("grades.csv")
-
 ```
 
 ```{r}
 nrow(grades)
 ```
 #Simple analyses
+
+
 ## Question 2 - Number of Grades
 
 ```{r, echo = FALSE}
@@ -39,9 +48,7 @@ unique_students <- grades %>%
 
 # Calculate the number of unique students
 num_students <- nrow(unique_students)
-
 ```
-## Preview of the Last Five Rows of the Grades Data Set
 
 ## Preview of the Last Five Rows of the Grades Data Set
 
@@ -57,7 +64,9 @@ grades |>
 students <- grades |> distinct(id, group)
 
 # Display the first few rows of the students data frame
-students |> slice_head(n = 5) |> knitr::kable()
+students |>
+  slice_head(n = 5) |>
+  knitr::kable()
 ```
 ## question 5 
 ```{r}
@@ -72,7 +81,7 @@ ggplot(students_per_group, aes(x = factor(group), y = n, fill = factor(group))) 
   geom_col() +
   labs(title = "Number of Students per Group", x = "Group", y = "Number of Students") +
   theme_minimal() +
-  scale_fill_viridis_d() 
+  scale_fill_viridis_d()
 ```
 #question 6 
 ```{r}
@@ -98,9 +107,8 @@ ggplot(grades, aes(x = factor(semester), y = grade, fill = factor(semester))) +
   labs(title = "Grade Distribution by Semester", x = "Semester", y = "Grade") +
   theme_minimal() +
   scale_fill_viridis_d(name = "Semester")
-#comment;
+# comment;
 "it seems that the second semester has higher grades then the first one but idk why maybe they have more experince"
-
 ```
 
 #Attendance analysis
@@ -114,18 +122,17 @@ grades_per_student <- grades |>
 grades_per_student |>
   slice_head(n = 5) |>
   knitr::kable()
-
 ```
 ```{r}
 grades %>%
-  distinct(id, course, .keep_all = TRUE) %>%  # Ensure each student-course combination is unique
-  group_by(course) %>%                        # Group by course
+  distinct(id, course, .keep_all = TRUE) %>% # Ensure each student-course combination is unique
+  group_by(course) %>% # Group by course
   summarise(
-    min_grade = min(grade, na.rm = TRUE),      # Minimum grade for each course
+    min_grade = min(grade, na.rm = TRUE), # Minimum grade for each course
     median_grade = median(grade, na.rm = TRUE), # Median grade for each course
-    mean_grade = mean(grade, na.rm = TRUE),    # Mean grade for each course
-    max_grade = max(grade, na.rm = TRUE),      # Maximum grade for each course
-    n_students = n()                           # Number of unique students in each course
+    mean_grade = mean(grade, na.rm = TRUE), # Mean grade for each course
+    max_grade = max(grade, na.rm = TRUE), # Maximum grade for each course
+    n_students = n() # Number of unique students in each course
   )
 ```
 ## question 9 
@@ -134,7 +141,7 @@ grades %>%
 onmyodo_grades <- grades %>%
   filter(course == "Onmyodo and Occult Arts") %>%
   group_by(id, group) %>%
-  summarise(num_grades = n(), .groups = "drop")  # Count grades for each student
+  summarise(num_grades = n(), .groups = "drop") # Count grades for each student
 
 # Display the first 5 rows as an extract
 onmyodo_grades %>%
@@ -144,9 +151,9 @@ onmyodo_grades %>%
 ##question 10 
 
 ```{r}
- # Calculate the distribution of the number of grades
+# Calculate the distribution of the number of grades
 grade_distribution <- onmyodo_grades %>%
-  count(num_grades, name = "num_students")  # Count the number of students for each number of grades
+  count(num_grades, name = "num_students") # Count the number of students for each number of grades
 
 # Plot the distribution
 ggplot(grade_distribution, aes(x = num_grades, y = num_students)) +
@@ -183,8 +190,8 @@ student_course_averages <- grades %>%
 # Pivot to create a wide-format data frame with one column per course
 student_course_pivot <- student_course_averages %>%
   pivot_wider(
-    names_from = course,      # Use course names as new column names
-    values_from = avg_grade    # Use the average grade as the values for each course
+    names_from = course, # Use course names as new column names
+    values_from = avg_grade # Use the average grade as the values for each course
   )
 
 # Display a small extract (first 5 rows) with id, group, and two example courses
@@ -201,7 +208,7 @@ average_grades <- student_course_pivot %>%
 
 # Scatter plot to compare the average grades in the two courses
 ggplot(average_grades, aes(x = `Ninjutsu and Stealth Arts`, y = `Bushido and Samurai Code`)) +
-  geom_point(color = "steelblue", size = 3, alpha = 0.7) +  # Points for each student
+  geom_point(color = "steelblue", size = 3, alpha = 0.7) + # Points for each student
   geom_smooth(method = "lm", color = "darkred", linetype = "dashed") + # Optional trend line
   labs(
     title = "Comparison of Average Grades in Bushido and Samurai Code vs. Ninjutsu and Stealth Arts",
@@ -250,7 +257,7 @@ correlation_by_group <- student_course_pivot %>%
   summarise(
     correlation = cor(`Shinto and Buddhist Philosophy`, `Calligraphy and Poetry`, use = "complete.obs")
   ) %>%
-  arrange(desc(abs(correlation)))  # Sort by absolute correlation to get the strongest correlation
+  arrange(desc(abs(correlation))) # Sort by absolute correlation to get the strongest correlation
 
 # Step 2: Identify the group with the strongest correlation
 strongest_correlation_group <- correlation_by_group$group[1]
@@ -382,11 +389,11 @@ paste("The number of students who did not pass but have a final grade of 10 or h
 ```
 ## question 20 
 ```{r}
- # Step 1: Calculate the pass rate per group
+# Step 1: Calculate the pass rate per group
 pass_rate_per_group <- pass_status %>%
   group_by(group) %>%
   summarise(
-    pass_rate = mean(pass) * 100  # Calculate pass rate as a percentage
+    pass_rate = mean(pass) * 100 # Calculate pass rate as a percentage
   )
 
 # Step 2: Plot the pass rate per group
@@ -399,4 +406,3 @@ ggplot(pass_rate_per_group, aes(x = factor(group), y = pass_rate)) +
   ) +
   theme_minimal()
 ```
-
