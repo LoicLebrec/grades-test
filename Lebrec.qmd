@@ -242,5 +242,32 @@ correlation_by_group <- student_course_pivot %>%
 # Display the results
 correlation_by_group
 ```
+## question 14 
+```{r}
+# Step 1: Calculate the correlation for each group
+correlation_by_group <- student_course_pivot %>%
+  group_by(group) %>%
+  summarise(
+    correlation = cor(`Shinto and Buddhist Philosophy`, `Calligraphy and Poetry`, use = "complete.obs")
+  ) %>%
+  arrange(desc(abs(correlation)))  # Sort by absolute correlation to get the strongest correlation
+
+# Step 2: Identify the group with the strongest correlation
+strongest_correlation_group <- correlation_by_group$group[1]
+
+# Step 3: Filter data for the identified group
+strongest_group_data <- student_course_pivot %>%
+  filter(group == strongest_correlation_group)
+
+# Step 4: Plot the average grades
+ggplot(strongest_group_data, aes(x = `Calligraphy and Poetry`, y = `Shinto and Buddhist Philosophy`)) +
+  geom_point(color = "steelblue", size = 3, alpha = 0.7) +
+  labs(
+    title = paste("Average Grades in Shinto and Buddhist Philosophy vs. Calligraphy and Poetry"),
+    subtitle = paste("Group with strongest correlation (Group", strongest_correlation_group, ")"),
+    x = "Average Grade in Calligraphy and Poetry",
+    y = "Average Grade in Shinto and Buddhist Philosophy"
+  ) +
+  theme_minimal()
 ```
 
