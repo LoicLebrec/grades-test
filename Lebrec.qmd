@@ -297,4 +297,34 @@ final_grades %>%
     caption = "Top 5 Students by Final Grade"
   )
 ```
+## question 17 
+```{r}
+# 1. Summary Statistics for Final Grades by Group
+group_summary <- final_grades %>%
+  group_by(group) %>%
+  summarise(
+    mean_grade = mean(final_grade, na.rm = TRUE),
+    median_grade = median(final_grade, na.rm = TRUE),
+    min_grade = min(final_grade, na.rm = TRUE),
+    max_grade = max(final_grade, na.rm = TRUE),
+    .groups = "drop"
+  )
+
+# Display the summary table
+group_summary %>%
+  knitr::kable(
+    caption = "Summary Statistics of Final Grades by Group"
+  )
+
+# 2. Box Plot of Final Grades by Group
+ggplot(final_grades, aes(x = factor(group), y = final_grade)) +
+  geom_boxplot(fill = "lightblue") +
+  labs(
+    title = "Distribution of Final Grades by Group",
+    x = "Group",
+    y = "Final Grade"
+  ) +
+  theme_minimal()
+"Combining summary statistics and a box plot is the best approach because it gives both a quick numerical overview and a visual comparison. The table shows each group’s average, median, and range of final grades, while the box plot highlights grade distribution, spread, and any outliers across groups. Together, they make it easy to spot differences in performance between groups at a glance."
+```
 
