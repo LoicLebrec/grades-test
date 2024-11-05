@@ -218,7 +218,7 @@ ggplot(average_grades, aes(x = `Ninjutsu and Stealth Arts`, y = `Bushido and Sam
 The plot shows a slight positive trend: students who score well in “Bushido” tend to do a bit better in “Ninjutsu” too, but there’s a lot of spread, so the link isn’t very strong."
 ```
 
-## question 13 
+## question 14 
 ```{r}
 # Calculate the average grade per course for each student
 student_course_averages <- grades %>%
@@ -242,7 +242,7 @@ correlation_by_group <- student_course_pivot %>%
 # Display the results
 correlation_by_group
 ```
-## question 14 
+## question 15
 ```{r}
 # Step 1: Calculate the correlation for each group
 correlation_by_group <- student_course_pivot %>%
@@ -272,6 +272,29 @@ ggplot(strongest_group_data, aes(x = `Calligraphy and Poetry`, y = `Shinto and B
   theme(
     plot.title = element_text(size = 14, face = "bold", hjust = 0.5),
     axis.title = element_text(size = 12)
+  )
+```
+## question 16 
+```{r}
+# Step 1: Calculate the average grade per course for each student
+student_course_averages <- grades %>%
+  group_by(id, group, course) %>%
+  summarise(avg_grade = mean(grade, na.rm = TRUE), .groups = "drop")
+
+# Step 2: Calculate the final grade as the average of these course averages for each student
+final_grades <- student_course_averages %>%
+  group_by(id, group) %>%
+  summarise(final_grade = mean(avg_grade, na.rm = TRUE), .groups = "drop")
+
+# Step 3: Sort the data frame in descending order by final grade
+final_grades <- final_grades %>%
+  arrange(desc(final_grade))
+
+# Step 4: Display the first five rows
+final_grades %>%
+  slice_head(n = 5) %>%
+  knitr::kable(
+    caption = "Top 5 Students by Final Grade"
   )
 ```
 
