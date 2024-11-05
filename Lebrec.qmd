@@ -67,4 +67,19 @@ ggplot(students_per_group, aes(x = factor(group), y = n, fill = factor(group))) 
   theme_minimal() +
   scale_fill_viridis_d() # Optional color scale, or replace with a different palette
 ```
+#question 6 
+```{r}
+# Filter for the course "Archery and Marksmanship" and compute the average grade per group
+archery_avg <- grades |>
+  filter(course == "Archery and Marksmanship") |>
+  group_by(group) |>
+  summarise(avg_grade = mean(grade, na.rm = TRUE))
+
+# Plot the average grade per group using geom_col()
+ggplot(archery_avg, aes(x = factor(group), y = avg_grade, fill = factor(group))) +
+  geom_col() +
+  labs(title = "Average Grade in Archery and Marksmanship by Group", x = "Group", y = "Average Grade") +
+  theme_minimal() +
+  scale_fill_viridis_d() # Optional, use a color scale for differentiation
+```
 
