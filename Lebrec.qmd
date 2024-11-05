@@ -103,3 +103,29 @@ ggplot(grades, aes(x = factor(semester), y = grade, fill = factor(semester))) +
 
 ```
 
+#Attendance analysis
+##question 8 
+```{r}
+# Compute the number of grades per student, including their id and group
+grades_per_student <- grades |>
+  count(id, group, name = "num_grades")
+
+# Display an extract of the resulting data frame (first 5 rows)
+grades_per_student |>
+  slice_head(n = 5) |>
+  knitr::kable()
+
+```
+```{r}
+grades %>%
+  distinct(id, course, .keep_all = TRUE) %>%  # Ensure each student-course combination is unique
+  group_by(course) %>%                        # Group by course
+  summarise(
+    min_grade = min(grade, na.rm = TRUE),      # Minimum grade for each course
+    median_grade = median(grade, na.rm = TRUE), # Median grade for each course
+    mean_grade = mean(grade, na.rm = TRUE),    # Mean grade for each course
+    max_grade = max(grade, na.rm = TRUE),      # Maximum grade for each course
+    n_students = n()                           # Number of unique students in each course
+  )
+```
+
