@@ -128,4 +128,17 @@ grades %>%
     n_students = n()                           # Number of unique students in each course
   )
 ```
+## question 9 
+```{r}
+# Filter for "Onmyodo and Occult Arts" and count grades per student
+onmyodo_grades <- grades %>%
+  filter(course == "Onmyodo and Occult Arts") %>%
+  group_by(id, group) %>%
+  summarise(num_grades = n(), .groups = "drop")  # Count grades for each student
+
+# Display the first 5 rows as an extract
+onmyodo_grades %>%
+  slice_head(n = 5) %>%
+  knitr::kable()
+```
 
