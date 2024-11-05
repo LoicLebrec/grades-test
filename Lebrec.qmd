@@ -158,4 +158,17 @@ ggplot(grade_distribution, aes(x = num_grades, y = num_students)) +
   ) +
   theme_minimal()
 ```
+## question 11 
+```{r}
+# Violin plot to see the distribution of grades per student by group
+ggplot(onmyodo_grades, aes(x = factor(group), y = num_grades)) +
+  geom_violin(fill = "lightgreen", alpha = 0.7) +
+  labs(
+    title = "Distribution of Number of Grades in Onmyodo and Occult Arts by Group",
+    x = "Group",
+    y = "Number of Grades per Student"
+  ) +
+  theme_minimal()
+"comment: at eye level there is no big discranpecies, but more calculation would be required, there seems to be an exeption for group 15 tho."
+```
 
