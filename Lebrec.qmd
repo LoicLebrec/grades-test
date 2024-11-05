@@ -1,0 +1,70 @@
+---
+title: "Lebrec"
+format: html
+---
+
+```{r}
+library(dplyr)
+library(ggplot2)
+library(readr)
+library(knitr)
+library(tidyr)
+theme_set(theme_minimal())
+```
+
+## Question 1 - Load the Data Set
+
+```{r}
+# Load the data set
+grades <- read_csv("grades.csv")
+
+```
+
+```{r}
+nrow(grades)
+```
+## Question 2 - Number of Grades
+
+```{r, echo = FALSE}
+# Calculate and display the sentence with the number of grades
+paste("The data set contains", nrow(grades), "grades.")
+```
+
+## question 3 
+```{r}
+# Create a new data frame with unique students and their groups
+unique_students <- grades %>%
+  distinct(id, group)
+
+# Calculate the number of unique students
+num_students <- nrow(unique_students)
+
+```
+## Preview of the Last Five Rows of the Grades Data Set
+
+## Preview of the Last Five Rows of the Grades Data Set
+
+```{r, echo = FALSE}
+# Display the last five rows of the grades data frame
+grades |>
+  slice_tail(n = 5) |>
+  knitr::kable()
+```
+## question 4 
+```{r}
+# Create a students data frame with unique student IDs and groups
+students <- grades |> distinct(id, group)
+
+# Display the first few rows of the students data frame
+students |> slice_head(n = 5) |> knitr::kable()
+```
+## question 5 
+```{r}
+# Create a bar plot of the number of students per group with colors
+ggplot(students_per_group, aes(x = factor(group), y = n, fill = factor(group))) +
+  geom_col() +
+  labs(title = "Number of Students per Group", x = "Group", y = "Number of Students") +
+  theme_minimal() +
+  scale_fill_viridis_d() # Optional color scale, or replace with a different palette
+```
+
