@@ -368,4 +368,16 @@ pass_status %>%
     caption = "Pass Status of Students Based on Year-End Criteria"
   )
 ```
+## question 19 
+```{r}
+# Filter for students who do not pass but have a final grade >= 10
+students_non_pass_high_grade <- pass_status %>%
+  filter(pass == FALSE, final_grade >= 10)
+
+# Count the number of these students
+num_students_non_pass_high_grade <- nrow(students_non_pass_high_grade)
+
+# Display the result with a sentence
+paste("The number of students who did not pass but have a final grade of 10 or higher is:", num_students_non_pass_high_grade)
+```
 
