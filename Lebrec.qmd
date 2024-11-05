@@ -213,5 +213,34 @@ ggplot(average_grades, aes(x = `Ninjutsu and Stealth Arts`, y = `Bushido and Sam
     plot.title = element_text(size = 14, face = "bold", hjust = 0.5),
     axis.title = element_text(size = 12)
   )
+
+"readibility and the use of a trend line: Adding clear labels, subtle colors, and a dashed trend line makes the chart easy to read and helps viewers quickly spot any relationship between the grades in the two courses without visual clutter.
+The plot shows a slight positive trend: students who score well in “Bushido” tend to do a bit better in “Ninjutsu” too, but there’s a lot of spread, so the link isn’t very strong."
+```
+
+## question 13 
+```{r}
+# Calculate the average grade per course for each student
+student_course_averages <- grades %>%
+  group_by(id, group, course) %>%
+  summarise(avg_grade = mean(grade, na.rm = TRUE), .groups = "drop")
+
+# Pivot to create a wide-format data frame with average grades in each course
+student_course_pivot <- student_course_averages %>%
+  pivot_wider(
+    names_from = course,
+    values_from = avg_grade
+  )
+
+# Compute the correlation between the average grades in "Shinto and Buddhist Philosophy" and "Calligraphy and Poetry" for each group
+correlation_by_group <- student_course_pivot %>%
+  group_by(group) %>%
+  summarise(
+    correlation = cor(`Shinto and Buddhist Philosophy`, `Calligraphy and Poetry`, use = "complete.obs")
+  )
+
+# Display the results
+correlation_by_group
+```
 ```
 
