@@ -2,7 +2,7 @@
 title: "Lebrec"
 format: html
 ---
-
+#Introduction
 ```{r}
 library(dplyr)
 library(ggplot2)
@@ -23,6 +23,7 @@ grades <- read_csv("grades.csv")
 ```{r}
 nrow(grades)
 ```
+#Simple analyses
 ## Question 2 - Number of Grades
 
 ```{r, echo = FALSE}
