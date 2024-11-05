@@ -172,3 +172,46 @@ ggplot(onmyodo_grades, aes(x = factor(group), y = num_grades)) +
 "comment: at eye level there is no big discranpecies, but more calculation would be required, there seems to be an exeption for group 15 tho."
 ```
 
+#Grade analysis 
+## question 12 
+```{r}
+# Calculate the average grade per course for each student
+student_course_averages <- grades %>%
+  group_by(id, group, course) %>%
+  summarise(avg_grade = mean(grade, na.rm = TRUE), .groups = "drop")
+
+# Pivot to create a wide-format data frame with one column per course
+student_course_pivot <- student_course_averages %>%
+  pivot_wider(
+    names_from = course,      # Use course names as new column names
+    values_from = avg_grade    # Use the average grade as the values for each course
+  )
+
+# Display a small extract (first 5 rows) with id, group, and two example courses
+student_course_pivot %>%
+  select(id, group, `Archery and Marksmanship`, `Bushido and Samurai Code`) %>%
+  slice_head(n = 5) %>%
+  knitr::kable()
+```
+## question 13 
+```{r}
+# Filter the data to only include the relevant courses for readability
+average_grades <- student_course_pivot %>%
+  select(id, group, `Bushido and Samurai Code`, `Ninjutsu and Stealth Arts`)
+
+# Scatter plot to compare the average grades in the two courses
+ggplot(average_grades, aes(x = `Ninjutsu and Stealth Arts`, y = `Bushido and Samurai Code`)) +
+  geom_point(color = "steelblue", size = 3, alpha = 0.7) +  # Points for each student
+  geom_smooth(method = "lm", color = "darkred", linetype = "dashed") + # Optional trend line
+  labs(
+    title = "Comparison of Average Grades in Bushido and Samurai Code vs. Ninjutsu and Stealth Arts",
+    x = "Average Grade in Ninjutsu and Stealth Arts",
+    y = "Average Grade in Bushido and Samurai Code"
+  ) +
+  theme_minimal() +
+  theme(
+    plot.title = element_text(size = 14, face = "bold", hjust = 0.5),
+    axis.title = element_text(size = 12)
+  )
+```
+
