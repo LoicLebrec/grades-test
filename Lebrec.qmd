@@ -327,4 +327,45 @@ ggplot(final_grades, aes(x = factor(group), y = final_grade)) +
   theme_minimal()
 "Combining summary statistics and a box plot is the best approach because it gives both a quick numerical overview and a visual comparison. The table shows each group’s average, median, and range of final grades, while the box plot highlights grade distribution, spread, and any outliers across groups. Together, they make it easy to spot differences in performance between groups at a glance."
 ```
+## question 18 
+```{r}
+# Step 1: Calculate the average grade per course for each student
+student_course_averages <- grades %>%
+  group_by(id, group, course) %>%
+  summarise(avg_grade = mean(grade, na.rm = TRUE), .groups = "drop")
+
+# Step 2: Check if each student meets the "no course average below 5" requirement
+course_pass <- student_course_averages %>%
+  group_by(id) %>%
+  summarise(course_pass = all(avg_grade >= 5), .groups = "drop")
+
+# Step 3: Calculate the average grade per semester for each student
+student_semester_averages <- grades %>%
+  group_by(id, semester) %>%
+  summarise(semester_avg = mean(grade, na.rm = TRUE), .groups = "drop")
+
+# Step 4: Check if each student meets the "semester average >= 10" requirement
+semester_pass <- student_semester_averages %>%
+  group_by(id) %>%
+  summarise(semester_pass = all(semester_avg >= 10), .groups = "drop")
+
+# Step 5: Calculate the final grade (overall average) for each student
+final_grades <- student_course_averages %>%
+  group_by(id, group) %>%
+  summarise(final_grade = mean(avg_grade, na.rm = TRUE), .groups = "drop")
+
+# Step 6: Combine all criteria to determine if the student passes
+pass_status <- final_grades %>%
+  left_join(course_pass, by = "id") %>%
+  left_join(semester_pass, by = "id") %>%
+  mutate(pass = course_pass & semester_pass) %>%
+  select(id, group, final_grade, pass)
+
+# Display the resulting data frame
+pass_status %>%
+  slice_head(n = 5) %>%
+  knitr::kable(
+    caption = "Pass Status of Students Based on Year-End Criteria"
+  )
+```
 
