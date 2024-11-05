@@ -141,4 +141,21 @@ onmyodo_grades %>%
   slice_head(n = 5) %>%
   knitr::kable()
 ```
+##question 10 
+
+```{r}
+ # Calculate the distribution of the number of grades
+grade_distribution <- onmyodo_grades %>%
+  count(num_grades, name = "num_students")  # Count the number of students for each number of grades
+
+# Plot the distribution
+ggplot(grade_distribution, aes(x = num_grades, y = num_students)) +
+  geom_col(fill = "steelblue") +
+  labs(
+    title = "Distribution of the Number of Grades in Onmyodo and Occult Arts",
+    x = "Number of Grades",
+    y = "Number of Students"
+  ) +
+  theme_minimal()
+```
 
